@@ -1,20 +1,28 @@
 import pandas as pd
+from services.app.AppService import AppService
 
 class ExcelService():
-    def __init__(self, appId):
+    def __init__(self, app):
         self.path = self.get_file_path()
-        self.appId = appId
+        self.app = app
 
-    async def read_excel(self, header_data=None):
+    async def read_data(self, header_data=None):
         data = None
         if header_data:
-            read = pd.read_excel(self.path, nrows=0)
-            data = read.columns.tolist()
+            if  self.app['type'] == 'excel':
+                read = pd.read_excel(self.app['file'], nrows=0)
+                data = read.columns.tolist()
+            elif self.app['type'] in ['csv', 'googleSheet']:
+                read = pd.read_csv(self.app['file'], nrows=0)
+                data = read.columns.tolist()
         else:
-            data = pd.read_excel(self.path)
-
+            if self.app['type'] == 'excel':
+                data = pd.read_excel(self.app['file'])
+            elif self.app['type'] in ['csv', 'googleSheet']:
+                data = pd.read_csv(self.app['file'])
+        
         return data
     
     def get_file_path(self):
         return 'static/Sales.xlsx'
-
+        return 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQz44mwVMFs-nPVy_ILWATJATmQU6Lrfhe9jYEBmGQRltl7vJBlw8FimGNyxWepjeX3Gs25J00-krgA/pub?output=csv'

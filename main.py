@@ -9,7 +9,7 @@ from passlib.hash import sha256_crypt
 from fastapi.middleware.cors import CORSMiddleware
 from routers.file_route import router as file_route
 import config
-
+#python -m uvicorn main:app --reload
 app = FastAPI()
 
 app.include_router(file_route)
